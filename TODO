@@ -1,0 +1,9 @@
+- extend MTA-STS checks to fetch the actual policy
+  (https://mta-sts.<domain>/.well-known/mta-sts.txt)
+  and display details
+
+- add support for TLSA records (rfc6698):
+  - try _443._tcp.www.<domain>
+  - if domain has an MX record, try:
+    - _25._tcp.<MX>
+    - _993._tcp.<MX>

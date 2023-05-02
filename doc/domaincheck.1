@@ -1,0 +1,154 @@
+.Dd April 18, 2023
+.Dt DOMAINCHECK 1
+.Os
+.Sh NAME
+.Nm domaincheck
+.Nd check security aspects of a second-level domain name
+.Sh SYNOPSIS
+.Nm
+.Op Fl Vhv
+.Op Fl f Ar format
+.Op Fl r Ar resolver
+.Op Fl t Ar type
+.Sh DESCRIPTION
+The
+.Nm
+utility performs a number of DNS-based checks on the
+domain names given as input.
+.Sh OPTIONS
+The following options are supported by
+.Nm :
+.Bl -tag -width _r_resolver_
+.It Fl V
+Print version number and exit.
+.It Fl f Ar format
+Specify the output format.
+Valid formats are 'csv', 'json', and 'text' (default:
+\'text').
+for details.
+.It Fl h
+Print a short help message and exit.
+.It Fl r Ar resolver
+Use the given resolver for DNS lookups (default: stub
+resolver).
+See
+.Xr "RESOLVER"
+for details.
+.It Fl t Ar type
+Specify the type of check to perform (default: all).
+See
+.Xr "DETAILS"
+for a description of the supported checks.
+.It Fl v
+Be verbose.
+Can be specified multiple times.
+.El
+.Sh DETAILS
+Many security mechanisms can (only) be set on the
+second-level domain name, yet have a broad and often
+times not entirely obvious impact on all of its child
+domains.
+.Pp
+The
+.Nm
+utility can be used to perform a quick and simple
+assessment of a number of such checks.
+It will read second-level domain names from stdin one
+name per line and then perform the following checks:
+.Bl -tag -width mta_sts_
+.It \fBCAA\fR
+Identify whether the domain has any CAA records sets.
+See RFC8659.
+.It \fBDMARC\fR
+Identify whether DMARC is set for the given domain.
+See RFC7489.
+.It \fBDNSKEY\fR
+Identify whether the domain is has a DNSKEY record and
+if so, whether it has a valid DNSSEC signature.
+See RFC4034.
+.It \fBMX\fR
+Identify whether the domain has any MX records set.
+If so, check for the existence of a "Null MX" service
+record.
+See RFC7505.
+.It \fBMTA-STS\fR
+Identify whether the domain uses SMTP MTA Strict
+Transport Security.
+See RFC8461.
+.It \fBSPF\fR
+Identify whether the domain uses the Sender Policy
+Framework.
+See RFC7208.
+.It \fBTLS-RPT\fR
+Identify whether the domain uses SMTP TLS Reporting.
+See RFC8460.
+.It \fBTXT\fR
+Report on any additional DNS TXT records not relating
+to any of the above.
+.It \fBZONEMD\fR
+Report on the presence of the ZONEMD record.
+See RFC8976.
+.El
+.Pp
+Each of these checks can be specified to the
+.Fl t
+flag;
+multiple checks can be specified as a comma-separated
+list or as repeated flags.
+If no list of checks is specified, then
+.Nm
+will perform all of the above checks.
+.Sh RESOLVER
+By default,
+.Nm
+will perform DNS lookups against the default stub
+resolver via the operating system's standard domain
+name resolution library.
+.Pp
+To use a specific resolver, the user may use the
+.Fl r
+flag and provide a hostname or IP address, in which
+case
+.Nm
+will directly query that resolver.
+.Pp
+Finally, if the user specifies the special string
+\'auth' to the
+.Fl r
+flag, then
+.Nm
+will attempt to directly query one of the
+authoritative nameservers for the given domain.
+.Sh EXAMPLES
+To perform a full analysis of the supported aspects
+for the domain name 'akamai.com':
+.Bd -literal -offset indent
+echo akamai.com | domaincheck
+.Ed
+.Pp
+To verbosely look up only CAA and SPF information for
+the domains found in the file 'domains':
+.Bd -literal -offset indent
+domaincheck -v -v -t caa,spf <domains
+.Ed
+.Pp
+To generate json output for the information determined
+by asking the respective authoritative resolvers of
+each CNAME found in the 'akam.ai' zone file:
+.Bd -literal -offset indent
+awk '/CNAME.*\\.$/ { print $NF }' akam.ai | \\
+        sort -u |                          \\
+        domaincheck -j -r auth
+.Ed
+.Sh HISTORY
+.Nm
+was originally written by
+.An Jan Schaumann
+.Aq jschauma@akamai.com
+and
+.An Zuza Slawik
+.Aq zslawik@akamai.com
+in July 2022.
+.Sh BUGS
+Please file bug reports and feature requests via a PR
+in git or by emailing the authors.
