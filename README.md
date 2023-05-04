@@ -10,7 +10,7 @@ The `domaincheck(1)` utility can be used to perform a
 quick and simple assessment of a number of such
 checks.
 
-Checks of interest that this tool may perform include:
+Checks of interest that this tool performs include:
 
 - CAA
 - DMARC
@@ -19,7 +19,7 @@ Checks of interest that this tool may perform include:
 - MX
 - SPF
 - TLS-RPT
-- possibly list of additional TXT or SRV records
+- count / list of additional TXT records
 - ZONEMD
 
 
@@ -40,9 +40,10 @@ $ make PREFIX=~ install
 ```
 
 There's also a `setup.py` file in this directory, and
-running `make pip-install` will use that via `pip3` to
-resolve the dependencies and install `domaincheck(1)`
-into your python prefix:
+running `make pip-install` will use that via `pip3`
+(or whatever you set `PIP` to) to resolve the
+dependencies and install `domaincheck(1)` into your
+python prefix:
 
 ```
 $ make pip-install

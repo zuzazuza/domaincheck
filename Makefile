@@ -1,12 +1,13 @@
 NAME=domaincheck
 VERSION=$(shell sed -n -e 's/^VERSION = "\(.*\)"/\1/p' src/${NAME}.py)
 PREFIX?=/usr/local
+PIP?=pip3
 
 help:
 	@echo "The following targets are available:"
 	@echo "doc          format man page into .txt"
 	@echo "install      install ${NAME} into ${PREFIX}"
-	@echo "pip-install  install ${NAME} using pip3"
+	@echo "pip-install  install ${NAME} using ${PIP}"
 	@echo "readme       generate the README after a manual page update"
 	@echo "uninstall    uninstall ${NAME} from ${PREFIX}"
 
@@ -23,7 +24,7 @@ readme: doc
 
 pip-install:
 	cp src/${NAME}.py src/${NAME}
-	pip3 install .
+	${PIP} install .
 	rm -fr build src/${NAME} src/${NAME}.egg-info
 
 install:
