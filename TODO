@@ -1,3 +1,6 @@
+- add support for HTTPS (Type65) records
+  https://datatracker.ietf.org/doc/draft-ietf-dnsop-svcb-https/
+
 - extend MTA-STS checks to fetch the actual policy
   (https://mta-sts.<domain>/.well-known/mta-sts.txt)
   and display details
