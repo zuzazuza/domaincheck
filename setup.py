@@ -22,6 +22,6 @@ setup(
 	license		= 'Apache',
 	url		= 'https://github.com/zuzazuza/domaincheck',
 	install_requires= REQUIREMENTS,
-	scripts		= [ 'src/domaincheck' ],
+	scripts		= [ 'src/domaincheck.py' ],
 	data_files	= [ ('share/man/man1', [ 'doc/domaincheck.1' ]) ],
 )
