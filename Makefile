@@ -23,9 +23,8 @@ readme: doc
 	mv .readme README.md
 
 pip-install:
-	cp src/${NAME}.py src/${NAME}
 	${PIP} install .
-	rm -fr build src/${NAME} src/${NAME}.egg-info
+	rm -fr build src/${NAME}.egg-info
 
 install:
 	mkdir -p ${PREFIX}/bin ${PREFIX}/share/man/man1
